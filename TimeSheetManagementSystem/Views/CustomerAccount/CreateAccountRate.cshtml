@@ -109,9 +109,16 @@
             console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
             if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
                 alert("Please select a end date that is later than the start date");
+            } else {
+                var webFormData = new WebFormData(collectedRatePerHour, collectedEffectiveStartDate, collectedEffectiveEndDate, customerAccountId);
+                Post(webFormData);
             }
         } else {
             var webFormData = new WebFormData(collectedRatePerHour, collectedEffectiveStartDate, collectedEffectiveEndDate, customerAccountId);
+            Post(webFormData);
+        }//else
+
+        function Post(webFormData) {
             var webFormDataInString = JSON.stringify(webFormData);
 
             $createAccountRateHandler = jQuery.ajax({
@@ -183,7 +190,7 @@
                     layout: 'center'
                 }).show();
             });
-        }//else
+        }//end of post function
     });//end on on click function
 
     $('#cancelButton').on('click', function () {

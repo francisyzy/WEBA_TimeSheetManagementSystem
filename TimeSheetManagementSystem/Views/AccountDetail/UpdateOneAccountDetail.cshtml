@@ -232,9 +232,15 @@
             console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
             if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
                 alert("Please select a end date that is later than the start date");
+            } else {
+                var webFormData = new WebFormData(collectedDay, collectedlessonStartTime, collectedlessonEndTime, collectedEffectiveStartDate, collectedEffectiveEndDate, collectedIsVisible);
+                Put(webFormData);
             }
         } else {
             var webFormData = new WebFormData(collectedDay, collectedlessonStartTime, collectedlessonEndTime, collectedEffectiveStartDate, collectedEffectiveEndDate, collectedIsVisible);
+            Put(webFormData);
+        }//end of else
+        function Put(webFormData) {
             var webFormDataInString = JSON.stringify(webFormData);
 
             $updateAccountDetailHandler = jQuery.ajax({
@@ -305,7 +311,8 @@
                     layout: 'center'
                 }).show();
             });
-        }
+
+        }//end of function
     });//end on on click function
 
     $('#deleteButton').on('click', function () {
