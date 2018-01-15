@@ -1,0 +1,112 @@
+﻿<div class="container">
+    <div class="col-md-offset-2 col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Create Session Synopsis Record</div>
+            </div>
+            <div class="panel-body">
+                <form id="dataForm" role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="sessionSynopsisNameInput">Session Synopsis Name</label>
+                        <div class="col-md-4">
+                            <input type="text" id="sessionSynopsisNameInput" name="sessionSynopsisNameInput" class="form-control input-group-sm"
+                                   maxlength="30" placeholder="Session Synopsis Name" value="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="sessionSypnosisIsVisible">Visibility</label>
+                        <div class="col-md-4">
+                            <input type="checkbox" id="sessionSypnosisIsVisible" class="input-group-sm" name="isVisible" checked />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3"></label>
+                        <div class="col-md-9">
+                            <div class="pull-right">
+                                <input type="button" class="btn btn-primary" value="Save" id="saveButton" />
+                                <a class="btn btn-default" asp-action="Index" asp-controler="SessionSynopsis">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- end of div element which has the class="panel-body" -->
+        </div><!-- end of the div element which has the class="panel" -->
+    </div><!-- end of the div element which has class="col-md-offset-2 col-md-8" -->
+</div><!-- end of div element which has the class="container" -->
+
+
+
+<script>
+    $("[name='isVisible']").bootstrapSwitch();
+    $("#dataForm").validate({
+        rules: {
+            sessionSynopsisNameInput: {
+                required: true
+            }
+        }
+    });
+    function WebFormData(inSessionSynopsisName, inIsVisible, inCreatedById, inUpdatedById) {
+        this.SessionSynopsisName = inSessionSynopsisName;
+        this.IsVisible = inIsVisible;
+        this.CreatedById = inCreatedById;
+        this.UpdatedById = inUpdatedById;
+    }//need to get user id that sent this information?? https://stackoverflow.com/questions/4613992/using-page-user-identity-name-in-mvc3
+    $('#saveButton').on('click', function () {
+        var collectedSessionSynopsisName = $('#sessionSynopsisNameInput').val();
+        var collectedIsVisible = $('#sessionSypnosisIsVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
+        var collectedCreatedById = @this.User.Identity.Name;
+        var collectedUpdatedById = @this.User.Identity.Name;
+
+        if ($("#dataForm").valid() == false) {
+            console.log("invaild");
+        } else if (collectedSessionSynopsisName.length == 0) { //https://stackoverflow.com/questions/23668065/how-to-do-simple-client-side-form-validation-using-javascript-jquery#23668074
+            alert("Please input a session synopsis name");
+        } else if (jQuery.trim(collectedSessionSynopsisName).length == 0) {
+            alert("Please input a session synopsis name");
+        } else if (collectedSessionSynopsisName.match(/[^A-Za-z0-9 &]/g)) {
+            alert("illegal character detected, please remove symbols");
+        } else {
+            var webFormData = new WebFormData(collectedSessionSynopsisName, collectedIsVisible, collectedCreatedById, collectedUpdatedById);
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
+
+            $addUserHandler = jQuery.ajax({
+                type: 'POST',
+                url: '/API/SessionSynopsis',
+                dataType: 'json',
+                contentType: 'application/json;',
+                data: "'" + webFormDataInString + "'"
+            })
+            $addUserHandler.done(function (data, textStatus, jqXHR) {
+                if (data.status == "success") {
+                    new Noty({
+                        text: data.message, type: 'success',
+                        dismissQueue: true,
+                        layout: 'center'
+                    }).show();
+                } else {
+                    new Noty({
+                        text: data.message, type: 'error',
+                        dismissQueue: true,
+                        layout: 'center'
+                    }).show();
+
+                }
+            });
+            $addUserHandler.fail(function (data, textStatus, jqXHR) {
+                console.log('executed when runtime error on server side occurred');
+                new Noty({
+                    text: data.responseJSON.message,
+                    type: 'error',
+                    dismissQueue: true,
+                    layout: 'center'
+                }).show();
+            });
+
+        }//end of else
+    });
+
+</script>

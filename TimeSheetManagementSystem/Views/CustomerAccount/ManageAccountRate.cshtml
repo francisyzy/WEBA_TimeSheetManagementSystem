@@ -1,0 +1,187 @@
+<div class="panel  panel-primary">
+    <div class="panel-heading">
+        Manage Account Rate
+        <div class="btn-group pull-right">
+            <input type="button" class="btn btn-default btn-group-lg" value="Add Account Rate" id="addButton" />
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>Rate per hour</th>
+                            <th>Effective start date</th>
+                            <th>Effective end date</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountRateTableBody"></tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div><!-- end of Panel Body -->
+</div><!-- end of Main Panel -->
+
+<script>
+
+    customerAccountId = getCustomerAccountIdFromAddressBar();
+
+    function getCustomerAccountIdFromAddressBar() {
+        //Get customerAccountId from the url string in the browser's address bar
+        var urlArray = window.location.href.split('/');
+        var customerAccountId = urlArray[urlArray.length - 1];
+        return customerAccountId;
+    };
+
+    $('#addButton').on('click', function () {
+        window.location = '/CustomerAccount/CreateAccountRate/' + customerAccountId;
+    });//end of on click function
+
+    $(document).ready(function () {
+        loadUserData();
+    })
+    function loadUserData() {
+        //Note: jQuery.ajax(..) is also often written is $.ajax(..)
+        //console.log('/Api/AccountRate/GetAccountRateByCustomerAccountId/' + customerAccountId);
+        jQuery.ajax({
+            url: '/Api/AccountRate/GetAccountRateByCustomerAccountId/' + customerAccountId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+        }).done(function (data, textStatus, jqXHR) {
+            //This done method will
+            //The (data) input parameter automatically captures the response from the
+            //GET() method
+
+            //I usually use the following code
+            //to inspect the returned result captured by the data input parameter
+            //from the web server.
+            console.log(data);
+
+            //After inspecting the data object with the console.log
+            //I have clear picture of the structure and used
+            //the following variable to represent the response.d
+            var accountRateList = data;
+            var AccountRateId = '';
+            var ratesPerHour = '';
+            var startDate = '';
+            var endDate = '';
+            var customerAccountId = '';
+            var $tableElement = null;
+            var $cellElement = null;
+            var $rowElement = null;
+            //-------- Find the table element -----------
+            //I am using the $tableElement variable
+            //to represent the found HTML element which has a matching id of userTableBody
+            $tableBodyElement = $('#accountRateTableBody');
+
+            //I want to build rows and cells (using tr and td HTML elements) so that
+            //I can display user id, full name, email, user name (staff id) and role information
+            //within the HTML table element,userTableBody. Recall that, I have already asked the
+            //$tableBodyElement variable to represent (reference) the table element.
+
+            //-------- Begin creating <tr> and <td> HTML element ------
+            for (index = 0; index < accountRateList.length; index++) {
+                //Set this user variable to reference a user object
+                //within the customerAccountList Array.
+                accountRate = accountRateList[index];
+                //Copy out the customerAccount information
+                AccountRateId = accountRate.accountRateId;
+                ratesPerHour = accountRate.ratePerHour;
+                startDate = new Date(Date.parse(accountRate.effectiveStartDate));
+                endDate = new Date(Date.parse(accountRate.effectiveEndDate));
+                //https://stackoverflow.com/questions/17950075/convert-c-sharp-datetime-to-javascript-date
+                customerAccountId = accountRate.customerAccountId;
+                //Create new HTML <tr> element.
+                //At the same time let the $rowElement variable to represent it.
+                $rowElement = $('<tr></tr>');
+                //Create the 1st cell element which display Actions ()
+                //$dropdown
+                //https://stackoverflow.com/questions/13358138/how-can-you-add-data-toggle-dropdown-to-an-anchor
+                //https://www.w3schools.com/jquery/jquery_ref_html.asp
+                //https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_dropdown-menu&stacked=h
+                $div = $('<div></div>').addClass('dropdown');
+                $dropdown = $('<a></a>').addClass('btn btn-default dropdown-toggle').attr("data-toggle", "dropdown");
+                $span = $('<span></span>').addClass('caret');
+                $dropdown.append($span);
+                $ul = $('<ul></ul>').addClass('dropdown-menu');
+                $li = $('<li></li>');
+                $hyperLinkElement = $('<a>Update</a>').attr('href', '/CustomerAccount/UpdateAccountRate/' + AccountRateId);
+                $li.append($hyperLinkElement);
+                $ul.append($li);
+                $div.append($dropdown);
+                $div.append($ul);
+                $cellElement = $('<td></td>');
+                $cellElement.append($div);
+                $rowElement.append($cellElement);
+                //Create the 2nd cell element which display ratesPerHour
+                $cellElement = $('<td></td>', { text: ratesPerHour });
+                $rowElement.append($cellElement);
+                //Create the 3rd cell element which display Start Date
+                $cellElement = $('<td></td>', { text: formatDate(startDate) });
+                $rowElement.append($cellElement);
+                //Create the 4th cell element which display End Date
+                $cellElement = $('<td></td>', { text: formatDate(endDate) });
+                $rowElement.append($cellElement);
+
+
+                //Also, create an additional hyperlink element which will
+                //look like a button due to the Bootstrap class.
+                //This <a> hyperlink element also need to have 1 important feature:
+                //When it is clicked, it will tell the web browser to request for the UserManager controller's
+                //Update action.
+                //and at the same time pass a QueryString data value of the respective user id.
+
+                //---------------- Using jQuery() to create the hyperlink element using the <a></a> --------
+                $hyperLinkElement = $('<a>Update</a>').attr('href', '/CustomerAccount/UpdateAccountRate/' + AccountRateId);
+                $hyperLinkElement.addClass('btn btn-primary');
+                //The $hyperLinkElement eventually represents (references) a HTML element which is:
+                //<a href="UserManager/Update/<user id>" class="btn btn-primary" >Update User</a>
+                //-----------------Using jQuery() to creating the 3rd cell for the row----------------------
+                $cellElement = $('<td></td>');
+                //-----------------Add the previous created hyperlink element, $hyperLinkElement
+                //                 into the newly created 8th cell.
+                //As a result, $cellElement references an element defined by:
+                //<td><<a href="UpdateUser/<user id>" class="btn btn-primary" >Update User</a></td>
+                $cellElement.append($hyperLinkElement);
+                //---------------Add the 8th cell into the row represented by the $rowElement
+                $rowElement.append($cellElement);
+
+                //Insert the $rowElement into the table element represented by $tableElement.
+                $tableBodyElement.append($rowElement);
+                //----End of creating one row to display one user by using <tr> and <td> HTML element ---
+                //       Proceed to the next user object in the userList Array.
+            }//end of for loop.
+
+        }//end of JavaScript anonymous function
+            ).fail(function (data, textStatus, jqXHR) {//end of the done() method;
+                console.log(textStatus);
+                console.log(data);
+                console.log(jqXHR);
+                new Noty({
+                    text: data.responseJSON.message, type: 'error',
+                    layout: 'center',
+                    template: '<div class="noty_message"><span class="noty_text"></span>'
+                }).show();
+            });//end of .fail();
+    }//end of loadUserData();
+
+    //https://stackoverflow.com/questions/25275696/javascript-format-date-time#25275808
+    function formatDate(date) {
+        if (isNaN(date.getTime())) { //https://stackoverflow.com/questions/1353684/detecting-an-invalid-date-date-instance-in-javascript#1353711
+            return "NA";
+        } else {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "  ";
+        }
+
+    }
+
+</script>

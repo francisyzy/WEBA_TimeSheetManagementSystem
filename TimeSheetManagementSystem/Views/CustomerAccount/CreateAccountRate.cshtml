@@ -1,0 +1,192 @@
+<div class="container">
+    <div class="col-md-offset-2 col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Create Account Rate</div>
+            </div>
+            <div class="panel-body">
+                <form id="dataForm" role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="ratePerHourInput">Rate Per Hour</label>
+                        <div class="col-md-4">
+                            <input type="text" id="ratePerHourInput" class="form-control input-group-sm"
+                                   maxlength="30" placeholder="" value="" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="effectiveStartDateInput">Effective Start Date</label>
+                        <div class="col-md-4">
+                            <input type="date" id="effectiveStartDateInput" class="form-control input-group-sm"
+                                   maxlength="30" placeholder="" value="" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="effectiveEndDateInput">Effective End Date</label>
+                        <div class="col-md-4">
+                            <input type="date" id="effectiveEndDateInput" class="form-control input-group-sm"
+                                   maxlength="30" placeholder="" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3"></label>
+                        <div class="col-md-9">
+                            <div class="pull-right">
+                                <input type="button" class="btn btn-primary" value="Save" id="saveButton" />
+                                <input type="button" class="btn btn-default" value="Cancel" id="cancelButton" />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!-- end of div element which has the class="panel-body" -->
+        </div><!-- end of the div element which has the class="panel" -->
+    </div><!-- end of the div element which has class="col-md-offset-2 col-md-8" -->
+</div><!-- end of div element which has the class="container" -->
+
+<script>
+    $("#dataForm").validate({
+        rules: {
+            effectiveStartDateInput: {
+                required: true,
+                date: true
+            },
+            effectiveEndDateInput: {
+                date: true
+            },
+            ratePerHourInput: {
+                required: true,
+                number: true
+            }
+        }
+    });
+    //Declare a document scope variable, window.sessionSynopsisId.
+    //A document scope variable value can be accessed anywhere in the web page during the
+    //entire life cycle at the web browser (till the user refresh the page)
+    //Naming convention: when you create a variable starting with window.
+    //the JavaScript engine knows that this is a global variable because it belongs to the window object.
+    //This variable will contain the GUID string user id value
+    //which will be extracted from the address bar.
+    //The variable will be used in the first Ajax() call, to retrieve JSON structured
+    //information about the user
+    customerAccountId = getCustomerAccountIdFromAddressBar();
+
+    function getCustomerAccountIdFromAddressBar() {
+        //Get customerAccountId from the url string in the browser's address bar
+        var urlArray = window.location.href.split('/');
+        var customerAccountId = urlArray[urlArray.length - 1];
+        return customerAccountId;
+    };
+
+    //Note: jQuery.ajax(..) is also often written is $.ajax(..)
+
+    function WebFormData(collectedRatePerHour, collectedEffectiveStartDate, collectedEffectiveEndDate, inCustomerAccountId) {
+        this.RatePerHour = collectedRatePerHour;
+        this.EffectiveStartDate = collectedEffectiveStartDate;
+        this.EffectiveEndDate = collectedEffectiveEndDate;
+        this.CustomerAccountId = inCustomerAccountId;
+    }
+    function UpdateCustomerAccountData(collectedUpdatedById) {
+        this.UpdatedById = collectedUpdatedById
+    }
+    $('#saveButton').on('click', function () {
+        var collectedRatePerHour = $('#ratePerHourInput').val();
+        var collectedEffectiveStartDate = $('#effectiveStartDateInput').val();
+        var collectedEffectiveEndDate = $('#effectiveEndDateInput').val();
+        if ($("#dataForm").valid() == false) {
+            console.log("invaild");
+        } else if (collectedEffectiveStartDate.length == 0) { //https://stackoverflow.com/questions/23668065/how-to-do-simple-client-side-form-validation-using-javascript-jquery#23668074
+            alert("Please select an effective start date");
+        } else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
+            alert("Please select an effective start date");
+        } else if (collectedRatePerHour.length == 0) { //https://stackoverflow.com/questions/23668065/how-to-do-simple-client-side-form-validation-using-javascript-jquery#23668074
+            alert("Please input rate per hour");
+        } else if (jQuery.trim(collectedRatePerHour).length == 0) {
+            alert("Please input rate per hour");
+        } else if (collectedRatePerHour.match(/[^0-9 .]/g)) {
+            alert("illegal character detected, please only insert numbers");
+        } else if (collectedEffectiveEndDate != "") {
+            console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
+            console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
+            if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
+                alert("Please select a end date that is later than the start date");
+            }
+        } else {
+            var webFormData = new WebFormData(collectedRatePerHour, collectedEffectiveStartDate, collectedEffectiveEndDate, customerAccountId);
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            $createAccountRateHandler = jQuery.ajax({
+                type: 'POST',
+                url: '/API/AccountRate',
+                dataType: 'json',
+                contentType: 'application/json;',
+                data: "'" + webFormDataInString + "'"
+            })
+            $createAccountRateHandler.done(function (data, textStatus, jqXHR) {
+                if (data.status == "success") {
+                    new Noty({
+                        text: data.message, type: 'success',
+                        dismissQueue: true,
+                        layout: 'center'
+                    }).show();
+
+                    //updated by id
+                    var collectedUpdatedById = @this.User.Identity.Name;
+
+                    var updateCustomerAccountData = new UpdateCustomerAccountData(collectedUpdatedById);
+                    var updateCustomerAccountDataInString = JSON.stringify(updateCustomerAccountData);
+                    //console.log(updateCustomerAccountDataInString);
+                    $updateCustomerAccountHandler = jQuery.ajax({
+                        type: 'PUT',
+                        url: '/API/CustomerAccount/Update/' + customerAccountId,
+                        dataType: 'json',
+                        contentType: 'application/json;',
+                        data: "'" + updateCustomerAccountDataInString + "'"
+                    })
+                    $updateCustomerAccountHandler.done(function (data, textStatus, jqXHR) {
+                        if (data.status == "success") {
+                            new Noty({
+                                text: data.message, type: 'success',
+                                dismissQueue: true,
+                                layout: 'center'
+                            }).show();
+                        } else {
+                            new Noty({
+                                text: data.message, type: 'error',
+                                dismissQueue: true,
+                                layout: 'center'
+                            }).show();
+                        }
+                    });
+                    $updateCustomerAccountHandler.fail(function (data, textStatus, jqXHR) {
+                        console.log('executed when runtime error on server side occurred');
+                        new Noty({
+                            text: data.responseJSON.message,
+                            type: 'error',
+                            dismissQueue: true,
+                            layout: 'center'
+                        }).show();
+                    });
+                } else {
+                    new Noty({
+                        text: data.message, type: 'error',
+                        dismissQueue: true,
+                        layout: 'center'
+                    }).show();
+                }
+            });
+            $createAccountRateHandler.fail(function (data, textStatus, jqXHR) {
+                console.log('executed when runtime error on server side occurred');
+                new Noty({
+                    text: data.responseJSON.message,
+                    type: 'error',
+                    dismissQueue: true,
+                    layout: 'center'
+                }).show();
+            });
+        }//else
+    });//end on on click function
+
+    $('#cancelButton').on('click', function () {
+        window.location = '/CustomerAccount/ManageAccountRate/' + customerAccountId;
+    });//end of on click function
+</script>
