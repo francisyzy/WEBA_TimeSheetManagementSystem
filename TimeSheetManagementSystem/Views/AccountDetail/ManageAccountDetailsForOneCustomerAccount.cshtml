@@ -126,6 +126,8 @@
                 }
                 if ((accountDetail.startTimeInMinutes % 60) == 0) {
                     startMinute = "00";
+                } else if ((accountDetail.startTimeInMinutes % 60) < 10){
+                    startMinute = "0" + accountDetail.startTimeInMinutes % 60
                 } else {
                     startMinute = (accountDetail.startTimeInMinutes % 60);
                 }
@@ -139,6 +141,8 @@
                 }
                 if ((accountDetail.endTimeInMinutes % 60) == 0) {
                     endMinute = "00";
+                } else if ((accountDetail.endTimeInMinutes % 60) < 10) {
+                    endMinute = "0" + accountDetail.endTimeInMinutes % 60
                 } else {
                     endMinute = (accountDetail.endTimeInMinutes % 60);
                 }
