@@ -132,9 +132,16 @@
             console.log("collectedEffectiveEndDate" + collectedEndDate);
             if (collectedStartDate > collectedEndDate) {
                 alert("Please select a end date that is later than the start date");
-            }
+            } else {
+                var webFormData = new WebFormData(collectedAccountName, collectedComments, collectedIsVisible, collectedCreatedById, collectedUpdatedById/*, collectedRatePerHour, collectedStartDate, collectedEndDate*/);
+                Post(webFormData);
+             }
         }  else {
             var webFormData = new WebFormData(collectedAccountName, collectedComments, collectedIsVisible, collectedCreatedById, collectedUpdatedById/*, collectedRatePerHour, collectedStartDate, collectedEndDate*/);
+            Post(webFormData);
+        }//end of else
+
+        function Post(webFormData) {
             var webFormDataInString = JSON.stringify(webFormData);
 
             console.log(webFormDataInString);
@@ -248,7 +255,8 @@
                     layout: 'center'
                 }).show();
             });
-        }//end of else
+
+        }
 
     });//end of save button
 
