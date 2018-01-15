@@ -137,6 +137,9 @@
         this.IsVisible = collectedIsVisible;
         this.UpdatedById = collectedUpdatedById;
     }
+    function UpdateCustomerAccountData(collectedUpdatedById) {
+        this.UpdatedById = collectedUpdatedById
+    }
     $('#saveButton').on('click', function () {
         var collectedAccountName = $('#accountNameInput').val();
         var collectedComments = $('#commentsInput').val();
@@ -172,6 +175,43 @@
                         dismissQueue: true,
                         layout: 'center'
                     }).show();
+                    //update updatedby
+                    var collectedUpdatedById = @this.User.Identity.Name;
+
+                    var updateCustomerAccountData = new UpdateCustomerAccountData(collectedUpdatedById);
+                    var updateCustomerAccountDataInString = JSON.stringify(updateCustomerAccountData);
+                    console.log(updateCustomerAccountDataInString);
+                    $updateCustomerAccountHandler = jQuery.ajax({
+                        type: 'PUT',
+                        url: '/API/CustomerAccount/Update/' + customerAccountId,
+                        dataType: 'json',
+                        contentType: 'application/json;',
+                        data: "'" + updateCustomerAccountDataInString + "'"
+                    })
+                    $updateCustomerAccountHandler.done(function (data, textStatus, jqXHR) {
+                        if (data.status == "success") {
+                            new Noty({
+                                text: data.message, type: 'success',
+                                dismissQueue: true,
+                                layout: 'center'
+                            }).show();
+                        } else {
+                            new Noty({
+                                text: data.message, type: 'error',
+                                dismissQueue: true,
+                                layout: 'center'
+                            }).show();
+                        }
+                    });
+                    $updateCustomerAccountHandler.fail(function (data, textStatus, jqXHR) {
+                        console.log('executed when runtime error on server side occurred');
+                        new Noty({
+                            text: data.responseJSON.message,
+                            type: 'error',
+                            dismissQueue: true,
+                            layout: 'center'
+                        }).show();
+                    });
                 } else {
                     new Noty({
                         text: data.message, type: 'error',
