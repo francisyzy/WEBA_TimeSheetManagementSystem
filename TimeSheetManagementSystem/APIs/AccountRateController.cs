@@ -119,10 +119,23 @@ namespace TimeSheetManagementSystem.APIs
             
             var oneAccountRate = _context.AccountRates
                 .Where(item => item.AccountRateId == accountRateId).FirstOrDefault();
+
             var effectiveEndDate = accountRateChangeInput.EffectiveEndDate;
+            var effectiveStartDateChecking = accountRateChangeInput.EffectiveStartDate;
             if (accountRateChangeInput.EffectiveEndDate == "")
             {
                 effectiveEndDate = null;
+            }
+            else if (effectiveEndDate < effectiveStartDateChecking)
+            {
+                response = new { status = "fail", message = "End date must not be earlier than start date" };
+                return new JsonResult(response);
+            }
+            DateTime effectiveStartDate = accountRateChangeInput.EffectiveStartDate;
+            if (effectiveStartDate < DateTime.Now.Date)
+            {
+                response = new { status = "fail", message = "Start date must not be in the past" };
+                return new JsonResult(response);
             }
 
             oneAccountRate.RatePerHour = accountRateChangeInput.RatePerHour;
@@ -174,16 +187,21 @@ namespace TimeSheetManagementSystem.APIs
                 .Where(item => item.CustomerAccountId == customerAccountId).FirstOrDefault();
 
             var effectiveEndDate = accountRateNewInput.EffectiveEndDate;
-            if(accountRateNewInput.EffectiveEndDate == "")
+            var effectiveStartDateChecking = accountRateNewInput.EffectiveStartDate;
+            if (accountRateNewInput.EffectiveEndDate == "")
             {
                 effectiveEndDate = null;
+            } else if (effectiveEndDate < effectiveStartDateChecking)
+            {
+                response = new { status = "fail", message = "End date must not be earlier than start date" };
+                return new JsonResult(response);
             }
             DateTime effectiveStartDate = accountRateNewInput.EffectiveStartDate;
             if (effectiveStartDate < DateTime.Now.Date)
             {
                 response = new { status = "fail", message = "Start date must not be in the past" };
                 return new JsonResult(response);
-            }
+            } 
 
             newAccountRate.CustomerAccountId = accountRateNewInput.CustomerAccountId;
             newAccountRate.CustomerAccount = currentCustomerAccount;

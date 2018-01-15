@@ -95,34 +95,54 @@ namespace TimeSheetManagementSystem.APIs
         {
             int AccountDetailId = Int32.Parse(id);
             string databaseInnerExceptionMessage = "";
-            var AccountDetailChangeInput = JsonConvert.DeserializeObject<dynamic>(value);
+            var accountDetailChangeInput = JsonConvert.DeserializeObject<dynamic>(value);
             List<object> messages = new List<object>();
             bool status = true; //This variable is used to track the overall success of all the database operations
             object response;
 
             var oneAccountDetail = _context.AccountDetails
                 .Where(item => item.AccountDetailId == AccountDetailId).FirstOrDefault();
-            var effectiveEndDate = AccountDetailChangeInput.EffectiveEndDate;
-            if (AccountDetailChangeInput.EffectiveEndDate == "")
+
+
+            var effectiveEndDate = accountDetailChangeInput.EffectiveEndDate;
+            var effectiveStartDateChecking = accountDetailChangeInput.EffectiveStartDate;
+            if (accountDetailChangeInput.EffectiveEndDate == "")
             {
                 effectiveEndDate = null;
             }
+            else if (effectiveEndDate < effectiveStartDateChecking)
+            {
+                response = new { status = "fail", message = "End date must not be earlier than start date" };
+                return new JsonResult(response);
+            }
+            DateTime effectiveStartDate = accountDetailChangeInput.EffectiveStartDate;
+            if (effectiveStartDate < DateTime.Now.Date)
+            {
+                response = new { status = "fail", message = "Start date must not be in the past" };
+                return new JsonResult(response);
+            }
 
-            string lessonStartTimeString = AccountDetailChangeInput.lessonStartTime;
+            string lessonStartTimeString = accountDetailChangeInput.lessonStartTime;
             int startTimeInt = (int.Parse(lessonStartTimeString.Substring(0, lessonStartTimeString.IndexOf(":"))) * 60) +
                 int.Parse(lessonStartTimeString.Substring(lessonStartTimeString.IndexOf(":") + 1));
 
 
-            string lessonEndTimeString = AccountDetailChangeInput.lessonEndTime;
+            string lessonEndTimeString = accountDetailChangeInput.lessonEndTime;
             int endTimeInt = int.Parse(lessonEndTimeString.Substring(0, lessonEndTimeString.IndexOf(":"))) * 60 +
                 int.Parse(lessonEndTimeString.Substring(lessonEndTimeString.IndexOf(":") + 1));
 
-            oneAccountDetail.DayOfWeekNumber = AccountDetailChangeInput.day;
+            if (endTimeInt < startTimeInt)
+            {
+                response = new { status = "fail", message = "Start time must not be earlier than end time" };
+                return new JsonResult(response);
+            }
+
+            oneAccountDetail.DayOfWeekNumber = accountDetailChangeInput.day;
             oneAccountDetail.StartTimeInMinutes = startTimeInt;
             oneAccountDetail.EndTimeInMinutes = endTimeInt;
-            oneAccountDetail.EffectiveStartDate = AccountDetailChangeInput.EffectiveStartDate;
+            oneAccountDetail.EffectiveStartDate = accountDetailChangeInput.EffectiveStartDate;
             oneAccountDetail.EffectiveEndDate = effectiveEndDate;
-            oneAccountDetail.IsVisible = AccountDetailChangeInput.IsVisible;
+            oneAccountDetail.IsVisible = accountDetailChangeInput.IsVisible;
 
 
             try
@@ -170,12 +190,18 @@ namespace TimeSheetManagementSystem.APIs
                 .Where(item => item.CustomerAccountId == customerAccountId).FirstOrDefault();
 
             var effectiveEndDate = accountDetailNewInput.EffectiveEndDate;
+            var effectiveStartDateChecking = accountDetailNewInput.EffectiveStartDate;
             if (accountDetailNewInput.EffectiveEndDate == "")
             {
                 effectiveEndDate = null;
             }
+            else if (effectiveEndDate < effectiveStartDateChecking)
+            {
+                response = new { status = "fail", message = "End date must not be earlier than start date" };
+                return new JsonResult(response);
+            }
             DateTime effectiveStartDate = accountDetailNewInput.EffectiveStartDate;
-            if (effectiveStartDate<DateTime.Now.Date)
+            if (effectiveStartDate < DateTime.Now.Date)
             {
                 response = new { status = "fail", message = "Start date must not be in the past" };
                 return new JsonResult(response);
@@ -189,6 +215,12 @@ namespace TimeSheetManagementSystem.APIs
             string lessonEndTimeString = accountDetailNewInput.lessonEndTime;
             int endTimeInt = int.Parse(lessonEndTimeString.Substring(0, lessonEndTimeString.IndexOf(":"))) * 60 +
                 int.Parse(lessonEndTimeString.Substring(lessonEndTimeString.IndexOf(":") + 1));
+
+            if (endTimeInt < startTimeInt)
+            {
+                response = new { status = "fail", message = "Start time must not be earlier than end time" };
+                return new JsonResult(response);
+            }
 
             newAccountDetail.CustomerAccountId = accountDetailNewInput.CustomerAccountId;
             newAccountDetail.CustomerAccount = currentCustomerAccount;
