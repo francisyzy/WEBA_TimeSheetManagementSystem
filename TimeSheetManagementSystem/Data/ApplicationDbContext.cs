@@ -42,7 +42,7 @@ namespace TimeSheetManagementSystem.Data
           //optionsBuilder.UseSqlServer(@"Server=ILOVECODE\SQLEXPRESS;database=TimeSheetManagementSystemDB_v2;Trusted_Connection=True;MultipleActiveResultSets=True");
             //optionsBuilder.UseSqlServer(@"Server=MACBOOKAIR11WIN\SQLEXPRESS;database=TimeSheetManagementSystemDB_V1;Trusted_Connection=True;MultipleActiveResultSets=True");
           //optionsBuilder.UseSqlServer(@"Server=tcp:appd-assignment-v2.database.windows.net,1433;Initial Catalog=APPD_Assignment_V2;Persist Security Info=False;User ID=appdassignmenttwo;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;MultipleActiveResultSets=true;");
-            optionsBuilder.UseSqlServer(@"Server=tcp:weba-assignment.database.windows.net,1433;Initial Catalog=TimeSheetManagementSystemDB_V1;Persist Security Info=False;User ID=francisyzy;Password=Azureweba!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer(@"Server=tcp:weba-assignment.database.windows.net,1433;Initial Catalog=TimeSheetManagementSystemDB_V1;Persist Security Info=False;User ID=francisyzy;Password=Azureweba!;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
