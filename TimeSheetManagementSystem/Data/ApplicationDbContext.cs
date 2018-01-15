@@ -39,8 +39,10 @@ namespace TimeSheetManagementSystem.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         { //azure password Azureweba! user francisyzy
-       //optionsBuilder.UseSqlServer(@"Server=ILOVECODE\SQLEXPRESS;database=TimeSheetManagementSystemDB_v2;Trusted_Connection=True;MultipleActiveResultSets=True");
-        optionsBuilder.UseSqlServer(@"Server=MACBOOKAIR11WIN\SQLEXPRESS;database=TimeSheetManagementSystemDB_V1;Trusted_Connection=True;MultipleActiveResultSets=True");
+          //optionsBuilder.UseSqlServer(@"Server=ILOVECODE\SQLEXPRESS;database=TimeSheetManagementSystemDB_v2;Trusted_Connection=True;MultipleActiveResultSets=True");
+            //optionsBuilder.UseSqlServer(@"Server=MACBOOKAIR11WIN\SQLEXPRESS;database=TimeSheetManagementSystemDB_V1;Trusted_Connection=True;MultipleActiveResultSets=True");
+          //optionsBuilder.UseSqlServer(@"Server=tcp:appd-assignment-v2.database.windows.net,1433;Initial Catalog=APPD_Assignment_V2;Persist Security Info=False;User ID=appdassignmenttwo;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;MultipleActiveResultSets=true;");
+            optionsBuilder.UseSqlServer(@"Server=tcp:weba-assignment.database.windows.net,1433;Initial Catalog=TimeSheetManagementSystemDB_V1;Persist Security Info=False;User ID=francisyzy;Password=Azureweba!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -394,11 +396,11 @@ namespace TimeSheetManagementSystem.Data
                 .HasDefaultValue(false)
                 .IsRequired(true);
 
-             modelBuilder.Entity<TimeSheetDetail>()
-                .Property(input => input.WageRatePerHour)
-                .HasColumnName("WageRatePerHour")
-                .HasColumnType("decimal(6,2)")
-                .IsRequired(true);
+            modelBuilder.Entity<TimeSheetDetail>()
+               .Property(input => input.WageRatePerHour)
+               .HasColumnName("WageRatePerHour")
+               .HasColumnType("decimal(6,2)")
+               .IsRequired(true);
 
             //----------- Defining TimeSheetDetail Entity - End --------------
 
@@ -456,7 +458,7 @@ namespace TimeSheetManagementSystem.Data
               .HasOne(input => input.TimeSheet)
               .WithMany(input => input.TimeSheetDetails)
               .HasForeignKey(input => input.TimeSheetId);
-            
+
             //many-to-one relationship between TimeSheet and UserInfo
             //for the createdby relationship
             //Usually this relationship links to the administrator user inside
@@ -533,7 +535,7 @@ namespace TimeSheetManagementSystem.Data
             //Define many-to-one relationship between AccountRate and CustomerAccount
             //-- Missing relationship
 
-            
+
             //The following two lines need to be copied into the Setupdb file.
             /*
             migrationBuilder.Sql(File.ReadAllText("migrations/setup_AspNetUsers_Insert_trigger.sql"));
