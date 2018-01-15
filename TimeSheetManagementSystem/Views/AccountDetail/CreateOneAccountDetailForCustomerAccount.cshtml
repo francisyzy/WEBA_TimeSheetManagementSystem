@@ -135,6 +135,8 @@
             alert("Please select an effective start date");
         } else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
             alert("Please select an effective start date");
+        } else if (collectedlessonEndTime < collectedlessonStartTime){
+            alert("Please ensure end time is later than start time");
         } else if (collectedEffectiveEndDate != "") {
             console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
             console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
@@ -151,6 +153,8 @@
 
         function Post(webFormData) {
             var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
 
             $createAccountRateHandler = jQuery.ajax({
                 type: 'POST',

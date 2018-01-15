@@ -225,7 +225,9 @@
             console.log("invaild");
         } else if (collectedEffectiveStartDate.length == 0) { //https://stackoverflow.com/questions/23668065/how-to-do-simple-client-side-form-validation-using-javascript-jquery#23668074
             alert("Please select an effective start date");
-        } else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
+        } else if (collectedlessonEndTime < collectedlessonStartTime) {
+            alert("Please ensure end time is later than start time");
+        }  else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
             alert("Please select an effective start date");
         } else if (collectedEffectiveEndDate != "") {
             console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
