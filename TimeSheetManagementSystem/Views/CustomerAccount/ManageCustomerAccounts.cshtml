@@ -110,10 +110,10 @@
                 $hyperLinkElement = $('<a>Manage rate/hour</a>').attr('href', '/CustomerAccount/ManageAccountRate/' + customerAccountId);
                 $li.append($hyperLinkElement);
                 $ul.append($li);
-                $hyperLinkElement = $('<a>Add account details</a>').attr('href', '/CustomerAccount/CreateAccountDetail/' + customerAccountId);
+                $hyperLinkElement = $('<a>Add account details</a>').attr('href', '/AccountDetail/CreateOneAccountDetailForCustomerAccount/' + customerAccountId);
                 $li.append($hyperLinkElement);
                 $ul.append($li);
-                $hyperLinkElement = $('<a>Manage account details</a>').attr('href', '/CustomerAccount/ManageAccountDetail/' + customerAccountId);
+                $hyperLinkElement = $('<a>Manage account details</a>').attr('href', '/AccountDetail/ManageAccountDetailsForOneCustomerAccount/' + customerAccountId);
                 $li.append($hyperLinkElement);
                 $ul.append($li);
                 $div.append($dropdown);
