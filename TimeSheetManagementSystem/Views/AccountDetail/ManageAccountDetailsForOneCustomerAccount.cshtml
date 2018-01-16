@@ -8,7 +8,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-hover">
+                <table id="table" class="table table-hover">
                     <thead>
                         <tr>
                             <th>Actions</th>
@@ -225,7 +225,7 @@
                 //----End of creating one row to display one user by using <tr> and <td> HTML element ---
                 //       Proceed to the next user object in the userList Array.
             }//end of for loop.
-
+            $('#table').DataTable();
         }//end of JavaScript anonymous function
             ).fail(function (data, textStatus, jqXHR) {//end of the done() method;
                 console.log(textStatus);
