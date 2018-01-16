@@ -54,7 +54,7 @@
         this.UpdatedById = inUpdatedById;
     }//need to get user id that sent this information?? https://stackoverflow.com/questions/4613992/using-page-user-identity-name-in-mvc3
     $('#saveButton').on('click', function () {
-        var collectedSessionSynopsisName = $('#sessionSynopsisNameInput').val();
+        var collectedSessionSynopsisName = $('#sessionSynopsisNameInput').val().trim();
         var collectedIsVisible = $('#sessionSypnosisIsVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
         var collectedCreatedById = @this.User.Identity.Name;
         var collectedUpdatedById = @this.User.Identity.Name;

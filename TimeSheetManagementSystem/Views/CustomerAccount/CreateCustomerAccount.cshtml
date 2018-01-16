@@ -101,8 +101,8 @@
         //this.EffectiveEndDate = inEndDate;
     }//need to get user id that sent this information?? https://stackoverflow.com/questions/4613992/using-page-user-identity-name-in-mvc3
     $('#saveButton').on('click', function () {
-        var collectedAccountName = $('#accountNameInput').val();
-        var collectedComments = $('#commentsInput').val();
+        var collectedAccountName = $('#accountNameInput').val().trim();
+        var collectedComments = $('#commentsInput').val().trim();
         var collectedIsVisible = $('#isVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
         var collectedCreatedById = @this.User.Identity.Name;
         var collectedUpdatedById = @this.User.Identity.Name;

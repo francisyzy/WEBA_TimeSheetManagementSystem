@@ -141,8 +141,8 @@
         this.UpdatedById = collectedUpdatedById
     }
     $('#saveButton').on('click', function () {
-        var collectedAccountName = $('#accountNameInput').val();
-        var collectedComments = $('#commentsInput').val();
+        var collectedAccountName = $('#accountNameInput').val().trim();
+        var collectedComments = $('#commentsInput').val().trim();
         var collectedIsVisible = $('#isVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
         var collectedUpdatedById = @this.User.Identity.Name;
 

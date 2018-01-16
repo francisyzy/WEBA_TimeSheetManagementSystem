@@ -132,7 +132,7 @@
         this.UpdatedById = inUpdatedById;
     }
     $('#saveButton').on('click', function () {
-        var collectedSessionSynopsisName = $('#sessionSynopsisNameInput').val();
+        var collectedSessionSynopsisName = $('#sessionSynopsisNameInput').val().trim();
         var collectedIsVisible = $('#sessionSypnosisIsVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
         var collectedUpdatedById = @this.User.Identity.Name;
 
