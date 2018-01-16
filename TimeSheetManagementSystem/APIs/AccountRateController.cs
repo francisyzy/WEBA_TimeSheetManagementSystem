@@ -233,7 +233,7 @@ namespace TimeSheetManagementSystem.APIs
 
         // DELETE: api/AccountRate/5
         [HttpDelete("{id}")]
-        public async IActionResult DeleteAccountRate([FromRoute] int id)
+        public async Task<IActionResult> DeleteAccountRate([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -252,7 +252,7 @@ namespace TimeSheetManagementSystem.APIs
             await _context.SaveChangesAsync();
             object response = new { status = "success", message = "Deleted account rate record." };
 
-            return JsonResult(response);
+            return Ok(response);
         }
 
         private bool AccountRateExists(int id)
