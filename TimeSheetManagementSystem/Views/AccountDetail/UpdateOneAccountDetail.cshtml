@@ -23,28 +23,28 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="lessonStartTime">Lesson Start Time</label>
                         <div class="col-md-4">
-                            <input type="time" id="lessonStartTime" class="form-control input-group-sm"
+                            <input type="text" id="lessonStartTime" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="lessonEndTime">Lesson End Time</label>
                         <div class="col-md-4">
-                            <input type="time" id="lessonEndTime" class="form-control input-group-sm"
+                            <input type="text" id="lessonEndTime" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveStartDateInput">Effective Start Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveStartDateInput" name="effectiveStartDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveStartDateInput" name="effectiveStartDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveEndDateInput">Effective End Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveEndDateInput" name="effectiveEndDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveEndDateInput" name="effectiveEndDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" />
                         </div>
                     </div>
@@ -95,6 +95,8 @@
 <script>
     $('#effectiveStartDateInput').datepicker({});
     $('#effectiveEndDateInput').datepicker({});
+    $('#lessonStartTime').timepicker({ minuteStep: 5});
+    $('#lessonEndTime').timepicker({ minuteStep: 5});
     $("[name='isVisible']").bootstrapSwitch();
     $("#dataForm").validate({
         rules: {
@@ -166,35 +168,9 @@
             //For example, find the text input control, fullNameInput and set the text input control
             //'s value with the fullName variable's content.
             $('#day').val(accountDetail.day);
-            if (parseInt(accountDetail.startTimeInMinutes / 60) < 10) {
-                startHour = "0" + parseInt(accountDetail.startTimeInMinutes / 60);
-            } else {
-                startHour = parseInt(accountDetail.startTimeInMinutes / 60);
-            }
-            if ((accountDetail.startTimeInMinutes % 60) == 0) {
-                startMinute = "00";
-            } else if ((accountDetail.startTimeInMinutes % 60) < 10) {
-                startMinute = "0" + accountDetail.startTimeInMinutes % 60
-            } else {
-                startMinute = (accountDetail.startTimeInMinutes % 60);
-            }
-            startTime = startHour + ":" + startMinute;
-            $('#lessonStartTime').val(startTime);
-
-            if (parseInt(accountDetail.endTimeInMinutes / 60) < 10) {
-                endHour = "0" + parseInt(accountDetail.endTimeInMinutes / 60);
-            } else {
-                endHour = parseInt(accountDetail.endTimeInMinutes / 60);
-            }
-            if ((accountDetail.endTimeInMinutes % 60) == 0) {
-                endMinute = "00";
-            } else if ((accountDetail.endTimeInMinutes % 60) < 10) {
-                endMinute = "0" + accountDetail.endTimeInMinutes % 60
-            } else {
-                endMinute = (accountDetail.endTimeInMinutes % 60);
-            }
-            endTime = endHour + ":" + endMinute;
-            $('#lessonEndTime').val(endTime);
+            $('#lessonStartTime').timepicker('setTime', formatTime(accountDetail.startTimeInMinutes));
+            //$('#lessonEndTime').val(endTime);
+            $('#lessonEndTime').timepicker('setTime', formatTime(accountDetail.endTimeInMinutes));
             $('#effectiveStartDateInput').val(effectiveStartDate);
             $('#effectiveEndDateInput').val(effectiveEndDate);
             $('#accountDetailIsVisible').prop("checked", accountDetail.isVisible); //https://stackoverflow.com/questions/8206565/check-uncheck-checkbox-with-javascript#8206573
@@ -215,10 +191,11 @@
     function UpdateCustomerAccountData(collectedUpdatedById) {
         this.UpdatedById = collectedUpdatedById
     }
+
     $('#saveButton').on('click', function () {
         var collectedDay = $('#day').val();
-        var collectedlessonStartTime = $('#lessonStartTime').val();
-        var collectedlessonEndTime = $('#lessonEndTime').val();
+        var collectedlessonStartTime = unformatTime($('#lessonStartTime').val());
+        var collectedlessonEndTime = unformatTime($('#lessonEndTime').val());
         var collectedEffectiveStartDate = $('#effectiveStartDateInput').val();
         var collectedEffectiveEndDate = $('#effectiveEndDateInput').val();
         var collectedIsVisible = $('#accountDetailIsVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
@@ -227,13 +204,15 @@
             console.log("invaild");
         } else if (collectedEffectiveStartDate.length == 0) { //https://stackoverflow.com/questions/23668065/how-to-do-simple-client-side-form-validation-using-javascript-jquery#23668074
             alert("Please select an effective start date");
-        } else if (collectedlessonEndTime < collectedlessonStartTime) {
-            alert("Please ensure end time is later than start time");
+        //} else if (collectedlessonEndTime < collectedlessonStartTime) { //client side validation not working
+        //    console.log("collectedlessonEndTime" + collectedlessonEndTime); //need to use server side validation
+        //    console.log("collectedlessonStartTime" + collectedlessonStartTime);
+        //    alert("Please ensure end time is later than start time");
         }  else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
             alert("Please select an effective start date");
-        } else if (collectedEffectiveEndDate != "") {
-            console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
-            console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
+        } else if (collectedEffectiveEndDate != "") { //client side date validation not effective as server date is more important
+            //console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
+            //console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
             if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
                 alert("Please select a end date that is later than the start date");
             } else {
@@ -367,5 +346,37 @@
             return date.getFullYear() + "-" + (month) + "-" + (day);
         }
 
+    }
+
+    function formatTime(time) {
+        if (parseInt(time / 60) > 12) {
+            hour = parseInt(time / 60) - 12;
+            AMorPM = " PM";
+        } else {
+            hour = parseInt(time / 60);
+            AMorPM = " AM";
+        }
+        if ((time % 60) == 0) {
+            minute = "00";
+        } else if ((time % 60) < 10) {
+            minute = "0" + time % 60
+        } else {
+            minute = (time % 60);
+        }
+        return hour + ":" + minute + AMorPM;
+    }
+
+    function unformatTime(time) {
+        if (time.indexOf("PM") > -1) {
+            hour = parseInt(time.substring(0, time.indexOf(":"))) + 12;
+
+        } else {
+            hour = parseInt(time.substring(0, time.indexOf(":")));
+
+        }
+        minute = time.substring(time.indexOf(":") + 1, time.indexOf(":") + 3)
+        //console.log("hour" + hour);
+        //console.log("minute" + minute);
+        return hour + ":" + minute;
     }
 </script>

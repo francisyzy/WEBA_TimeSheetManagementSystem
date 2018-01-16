@@ -23,28 +23,28 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="lessonStartTime">Lesson Start Time</label>
                         <div class="col-md-4">
-                            <input type="time" id="lessonStartTime" class="form-control input-group-sm"
+                            <input type="text" id="lessonStartTime" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="lessonEndTime">Lesson End Time</label>
                         <div class="col-md-4">
-                            <input type="time" id="lessonEndTime" class="form-control input-group-sm"
+                            <input type="text" id="lessonEndTime" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveStartDateInput">Effective Start Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveStartDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveStartDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveEndDateInput">Effective End Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveEndDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveEndDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" />
                         </div>
                     </div>
@@ -74,6 +74,8 @@
     $("[name='isVisible']").bootstrapSwitch();
     $('#effectiveStartDateInput').datepicker({});
     $('#effectiveEndDateInput').datepicker({});
+    $('#lessonStartTime').timepicker({ minuteStep: 5 });
+    $('#lessonEndTime').timepicker({ minuteStep: 5 });
     $("#dataForm").validate({
         rules: {
             effectiveStartDateInput: {
@@ -125,8 +127,8 @@
     }
     $('#saveButton').on('click', function () {
         var collectedDay = $('#day').val();
-        var collectedlessonStartTime = $('#lessonStartTime').val();
-        var collectedlessonEndTime = $('#lessonEndTime').val();
+        var collectedlessonStartTime = unformatTime($('#lessonStartTime').val());
+        var collectedlessonEndTime = unformatTime($('#lessonEndTime').val());
         var collectedEffectiveStartDate = $('#effectiveStartDateInput').val();
         var collectedEffectiveEndDate = $('#effectiveEndDateInput').val();
         var collectedIsVisible = $('#accountDetailIsVisible').prop('checked'); //https://stackoverflow.com/questions/4813219/testing-if-a-checkbox-is-checked-with-jquery
@@ -137,9 +139,9 @@
             alert("Please select an effective start date");
         } else if (jQuery.trim(collectedEffectiveStartDate).length == 0) {
             alert("Please select an effective start date");
-        } else if (collectedlessonEndTime < collectedlessonStartTime){
-            alert("Please ensure end time is later than start time");
-        } else if (collectedEffectiveEndDate != "") {
+        //} else if (collectedlessonEndTime < collectedlessonStartTime){ //client side validation not working
+        //    alert("Please ensure end time is later than start time"); //need to use server side validation
+        } else if (collectedEffectiveEndDate != "") { //client side date validation not effective as server date is more important
             console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
             console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
             if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
@@ -233,4 +235,18 @@
     $('#cancelButton').on('click', function () {
         window.location = '/AccountDetail/ManageAccountDetailsForOneCustomerAccount/' + customerAccountId;
     });//end of on click function
+
+    function unformatTime(time) {
+        if (time.indexOf("PM") > -1) {
+            hour = parseInt(time.substring(0, time.indexOf(":"))) + 12;
+
+        } else {
+            hour = parseInt(time.substring(0, time.indexOf(":")));
+
+        }
+        minute = time.substring(time.indexOf(":") + 1, time.indexOf(":") + 3)
+        //console.log("hour" + hour);
+        //console.log("minute" + minute);
+        return hour + ":" + minute;
+    }
 </script>
