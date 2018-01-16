@@ -258,7 +258,9 @@ namespace TimeSheetManagementSystem.APIs
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                object httpFailRequestResultMessage = new { message = "Unable to delete account rate record." };
+                //Return a bad http request message to the client
+                return BadRequest(httpFailRequestResultMessage);
             }
 
             var accountDetail = await _context.AccountDetails.SingleOrDefaultAsync(m => m.AccountDetailId == id);
@@ -269,8 +271,9 @@ namespace TimeSheetManagementSystem.APIs
 
             _context.AccountDetails.Remove(accountDetail);
             await _context.SaveChangesAsync();
+            object response = new { status = "success", message = "Deleted account rate record." };
 
-            return Ok(accountDetail);
+            return Ok(response);
         }
 
         private bool AccountDetailExists(int id)
