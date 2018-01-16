@@ -16,14 +16,14 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveStartDateInput">Effective Start Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveStartDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveStartDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="effectiveEndDateInput">Effective End Date</label>
                         <div class="col-md-4">
-                            <input type="date" id="effectiveEndDateInput" class="form-control input-group-sm"
+                            <input type="text" id="effectiveEndDateInput" class="form-control input-group-sm"
                                    maxlength="30" placeholder="" value="" />
                         </div>
                     </div>
@@ -106,7 +106,7 @@
             alert("Please input rate per hour");
         } else if (collectedRatePerHour.match(/[^0-9 .]/g)) {
             alert("illegal character detected, please only insert numbers");
-        } else if (collectedEffectiveEndDate != "") {
+        } else if (collectedEffectiveEndDate != "") { //client side date validation not effective as server date is more important
             console.log("collectedEffectiveStartDate" + collectedEffectiveStartDate);
             console.log("collectedEffectiveEndDate" + collectedEffectiveEndDate);
             if (collectedEffectiveStartDate > collectedEffectiveEndDate) {
