@@ -108,7 +108,6 @@ namespace TimeSheetManagementSystem.Data
                 .Property(input => input.IsVisible)
                 .HasColumnName("IsVisible")
                 .HasColumnType("BIT")
-                .HasDefaultValue(true)
                 .IsRequired(true);
 
             modelBuilder.Entity<CustomerAccount>()
@@ -306,7 +305,6 @@ namespace TimeSheetManagementSystem.Data
                 .Property(input => input.IsVisible)
                 .HasColumnName("IsVisible")
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
                 .IsRequired(true);
 
             //----------- Defining AccountDetail Entity - End --------------
