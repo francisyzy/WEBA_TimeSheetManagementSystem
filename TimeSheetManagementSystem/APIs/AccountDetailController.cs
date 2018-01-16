@@ -218,7 +218,7 @@ namespace TimeSheetManagementSystem.APIs
 
             if (endTimeInt < startTimeInt)
             {
-                response = new { status = "fail", message = "Start time must not be earlier than end time" };
+                response = new { status = "fail", message = "End time must not be earlier than start time" };
                 return new JsonResult(response);
             }
 
