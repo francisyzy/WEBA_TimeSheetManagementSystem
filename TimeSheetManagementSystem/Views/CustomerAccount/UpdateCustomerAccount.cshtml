@@ -237,11 +237,11 @@
     });//end on on click function
 
     $('#deleteButton').on('click', function () {
-        $deleteSessionSynopsisHandler = jQuery.ajax({
+        $deleteCustomerAccountHandler = jQuery.ajax({
             type: 'Delete',
             url: '/API/CustomerAccount/' + customerAccountId,
         })
-        $deleteSessionSynopsisHandler.done(function (data, textStatus, jqXHR) {
+        $deleteCustomerAccountHandler.done(function (data, textStatus, jqXHR) {
             if (data.status == "success") {
                 new Noty({
                     text: data.message, type: 'success',
@@ -256,7 +256,67 @@
                 }).show();
             }
         });
-        $deleteSessionSynopsisHandler.fail(function (data, textStatus, jqXHR) {
+        $deleteCustomerAccountHandler.fail(function (data, textStatus, jqXHR) {
+            console.log('executed when runtime error on server side occurred');
+            console.log(data.responseJSON.message);
+            console.log(data);
+            new Noty({
+                text: data.responseJSON.message,
+                type: 'error',
+                template: '<div class="noty_message"><span class="noty_text"></span>',
+                layout: 'center'
+            }).show();
+        });
+        $deleteAccountRatesHandler = jQuery.ajax({
+            type: 'Delete',
+            url: '/API/AccountRate/DeleteByCustomerAccountId/' + customerAccountId,
+        })
+        $deleteAccountRatesHandler.done(function (data, textStatus, jqXHR) {
+            if (data.status == "success") {
+                new Noty({
+                    text: data.message, type: 'success',
+                    dismissQueue: true,
+                    layout: 'center'
+                }).show();
+            } else {
+                new Noty({
+                    text: data.message, type: 'error',
+                    template: '<div class="noty_message"><span class="noty_text"></span>',
+                    layout: 'center'
+                }).show();
+            }
+        });
+        $deleteAccountRatesHandler.fail(function (data, textStatus, jqXHR) {
+            console.log('executed when runtime error on server side occurred');
+            console.log(data.responseJSON.message);
+            console.log(data);
+            new Noty({
+                text: data.responseJSON.message,
+                type: 'error',
+                template: '<div class="noty_message"><span class="noty_text"></span>',
+                layout: 'center'
+            }).show();
+        });
+        $deleteAccountDetailsHandler = jQuery.ajax({
+            type: 'Delete',
+            url: '/API/AccountDetail/DeleteByCustomerAccountId/' + customerAccountId,
+        })
+        $deleteAccountDetailsHandler.done(function (data, textStatus, jqXHR) {
+            if (data.status == "success") {
+                new Noty({
+                    text: data.message, type: 'success',
+                    dismissQueue: true,
+                    layout: 'center'
+                }).show();
+            } else {
+                new Noty({
+                    text: data.message, type: 'error',
+                    template: '<div class="noty_message"><span class="noty_text"></span>',
+                    layout: 'center'
+                }).show();
+            }
+        });
+        $deleteAccountDetailsHandler.fail(function (data, textStatus, jqXHR) {
             console.log('executed when runtime error on server side occurred');
             console.log(data.responseJSON.message);
             console.log(data);
