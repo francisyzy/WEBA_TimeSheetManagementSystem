@@ -192,7 +192,37 @@
                                 dismissQueue: true,
                                 layout: 'center'
                             }).show();
-
+                            //delete customer account
+                            console.log("start deleting customeraccount");
+                            $deleteCustomerAccountHandler = jQuery.ajax({
+                                type: 'Delete',
+                                url: '/API/CustomerAccount/' + customerAccountId,
+                            })
+                            $deleteCustomerAccountHandler.done(function (data, textStatus, jqXHR) {
+                                if (data.status == "success") {
+                                    new Noty({
+                                        text: data.message, type: 'success',
+                                        dismissQueue: true,
+                                        layout: 'center'
+                                    }).show();
+                                } else {
+                                    new Noty({
+                                        text: data.message, type: 'error',
+                                        template: '<div class="noty_message"><span class="noty_text"></span>',
+                                        layout: 'center'
+                                    }).show();
+                                }
+                            });
+                            $deleteCustomerAccountHandler.fail(function (data, textStatus, jqXHR) {
+                                console.log('executed when runtime error on server side occurred FAIL TO DELETE');
+                                console.log(data);
+                                new Noty({
+                                    text: data.responseJSON.message,
+                                    type: 'error',
+                                    template: '<div class="noty_message"><span class="noty_text"></span>',
+                                    layout: 'center'
+                                }).show();
+                            });
                         }
                     });
                     $addAccountRateHandler.fail(function (data, textStatus, jqXHR) {
