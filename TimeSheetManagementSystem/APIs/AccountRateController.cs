@@ -138,6 +138,15 @@ namespace TimeSheetManagementSystem.APIs
                 return new JsonResult(response);
             }
 
+            AccountRate accountRateCheck = (AccountRate)_context.AccountRates
+                 .Where(accountRateItem => accountRateItem.AccountRateId == accountRateId).FirstOrDefault();
+
+            if (accountRateCheck != null && accountRateCheck.EffectiveEndDate != null && accountRateCheck.EffectiveEndDate > effectiveStartDate)
+            {
+                response = new { status = "fail", message = "Start date must be earlier than existing end date" };
+                return new JsonResult(response);
+            }
+
             oneAccountRate.RatePerHour = accountRateChangeInput.RatePerHour;
             oneAccountRate.EffectiveStartDate = accountRateChangeInput.EffectiveStartDate;
             oneAccountRate.EffectiveEndDate = effectiveEndDate;
@@ -201,7 +210,28 @@ namespace TimeSheetManagementSystem.APIs
             {
                 response = new { status = "fail", message = "Start date must not be in the past" };
                 return new JsonResult(response);
-            } 
+            }
+
+            AccountRate oneAccountRate = (AccountRate)_context.AccountRates
+                 .Where(accountRateItem => accountRateItem.CustomerAccountId == customerAccountId).FirstOrDefault();
+
+            if (oneAccountRate != null && oneAccountRate.EffectiveEndDate != null && oneAccountRate.EffectiveEndDate > effectiveStartDate)
+            {
+                response = new { status = "fail", message = "Start date must be earlier than existing end date" };
+                return new JsonResult(response);
+            }
+
+            //if (oneAccountRate != null) //debug easier with stepped if statements
+            //{
+            //    if (oneAccountRate.EffectiveEndDate != null)
+            //    {
+            //        if (oneAccountRate.EffectiveEndDate > effectiveStartDate)
+            //        {
+            //            response = new { status = "fail", message = "Start date must be earlier than existing end date" };
+            //            return new JsonResult(response);
+            //        }
+            //    }
+            //}
 
             newAccountRate.CustomerAccountId = accountRateNewInput.CustomerAccountId;
             newAccountRate.CustomerAccount = currentCustomerAccount;
