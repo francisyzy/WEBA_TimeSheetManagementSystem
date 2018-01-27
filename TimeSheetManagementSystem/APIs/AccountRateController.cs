@@ -132,16 +132,8 @@ namespace TimeSheetManagementSystem.APIs
                 return new JsonResult(response);
             }
             DateTime effectiveStartDate = accountRateChangeInput.EffectiveStartDate;
-            if (effectiveStartDate < DateTime.Now.Date)
-            {
-                response = new { status = "fail", message = "Start date must not be in the past" };
-                return new JsonResult(response);
-            }
 
-            AccountRate accountRateCheck = (AccountRate)_context.AccountRates
-                 .Where(accountRateItem => accountRateItem.AccountRateId == accountRateId).FirstOrDefault();
-
-            if (accountRateCheck != null && accountRateCheck.EffectiveEndDate != null && accountRateCheck.EffectiveEndDate > effectiveStartDate)
+            if (oneAccountRate != null && oneAccountRate.EffectiveEndDate != null && oneAccountRate.EffectiveEndDate > effectiveStartDate)
             {
                 response = new { status = "fail", message = "Start date must be earlier than existing end date" };
                 return new JsonResult(response);

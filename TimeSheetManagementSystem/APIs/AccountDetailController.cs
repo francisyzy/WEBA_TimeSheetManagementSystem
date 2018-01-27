@@ -116,9 +116,10 @@ namespace TimeSheetManagementSystem.APIs
                 return new JsonResult(response);
             }
             DateTime effectiveStartDate = accountDetailChangeInput.EffectiveStartDate;
-            if (effectiveStartDate < DateTime.Now.Date)
+
+            if (oneAccountDetail != null && oneAccountDetail.EffectiveEndDate != null && oneAccountDetail.EffectiveEndDate > effectiveStartDate)
             {
-                response = new { status = "fail", message = "Start date must not be in the past" };
+                response = new { status = "fail", message = "Start date must be earlier than existing end date" };
                 return new JsonResult(response);
             }
 
@@ -204,6 +205,15 @@ namespace TimeSheetManagementSystem.APIs
             if (effectiveStartDate < DateTime.Now.Date)
             {
                 response = new { status = "fail", message = "Start date must not be in the past" };
+                return new JsonResult(response);
+            }
+
+            AccountDetail oneAccountDetail = (AccountDetail)_context.AccountDetails
+                 .Where(accountDetailItem => accountDetailItem.CustomerAccountId == customerAccountId).FirstOrDefault();
+
+            if (oneAccountDetail != null && oneAccountDetail.EffectiveEndDate != null && oneAccountDetail.EffectiveEndDate > effectiveStartDate)
+            {
+                response = new { status = "fail", message = "Start date must be earlier than existing end date" };
                 return new JsonResult(response);
             }
 
