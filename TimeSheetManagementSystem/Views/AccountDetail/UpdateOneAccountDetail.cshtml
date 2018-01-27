@@ -342,8 +342,7 @@
         } else { //https://stackoverflow.com/questions/12346381/set-date-in-input-type-date#12347050
             var day = ("0" + date.getDate()).slice(-2);
             var month = ("0" + (date.getMonth() + 1)).slice(-2);
-
-            return date.getFullYear() + "-" + (month) + "-" + (day);
+            return month + "/" + day + "/" + date.getFullYear();
         }
 
     }
