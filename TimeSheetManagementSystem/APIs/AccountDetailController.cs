@@ -138,6 +138,14 @@ namespace TimeSheetManagementSystem.APIs
                 return new JsonResult(response);
             }
 
+            string dayOfWeekNumberString = accountDetailChangeInput.day;
+            int dayOfWeekNumber = int.Parse(dayOfWeekNumberString);
+            if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && oneAccountDetail.EndTimeInMinutes > startTimeInt)
+            {
+                response = new { status = "fail", message = "Start time must not overlapped previous end time" };
+                return new JsonResult(response);
+            }
+
             oneAccountDetail.DayOfWeekNumber = accountDetailChangeInput.day;
             oneAccountDetail.StartTimeInMinutes = startTimeInt;
             oneAccountDetail.EndTimeInMinutes = endTimeInt;
@@ -229,6 +237,14 @@ namespace TimeSheetManagementSystem.APIs
             if (endTimeInt < startTimeInt)
             {
                 response = new { status = "fail", message = "End time must not be earlier than start time" };
+                return new JsonResult(response);
+            }
+
+            string dayOfWeekNumberString = accountDetailNewInput.day;
+            int dayOfWeekNumber = int.Parse(dayOfWeekNumberString);
+            if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && oneAccountDetail.EndTimeInMinutes > startTimeInt)
+            {
+                response = new { status = "fail", message = "Start time must not overlapped previous end time" };
                 return new JsonResult(response);
             }
 
