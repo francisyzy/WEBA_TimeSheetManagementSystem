@@ -307,6 +307,70 @@ namespace TimeSheetManagementSystem.APIs
                 return BadRequest(ModelState);
             }
 
+            int accountRateCount = (int)Database.AccountRates
+                 .Where(accountRateItem => accountRateItem.CustomerAccountId == id).Count();
+
+            while (accountRateCount > 0)
+            {
+                AccountRate oneAccountRate = (AccountRate)Database.AccountRates
+                 .Where(accountRateItem => accountRateItem.CustomerAccountId == id).FirstOrDefault();
+                try
+                {
+                    try
+                    {
+                        Database.AccountRates.Remove(oneAccountRate);
+
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        //databaseInnerExceptionMessage = ex.InnerException.Message;
+                        //status = false;
+                        //messages.Add(databaseInnerExceptionMessage);
+                        //return new JsonResult(response);
+                    }
+
+                }
+                catch (Exception outerException)
+                {
+                    //object httpFailRequestResultMessage = new { message = "Unable to delete account rate record." +outerException };
+                    ////Return a bad http request message to the client
+                    //return BadRequest(httpFailRequestResultMessage);
+                }
+                accountRateCount--;
+            }
+
+            int accountDetailCount = (int)Database.AccountDetails
+                 .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).Count();
+
+            while (accountDetailCount > 0)
+            {
+                AccountDetail oneAccountDetail = (AccountDetail)Database.AccountDetails
+                 .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).FirstOrDefault();
+                try
+                {
+                    try
+                    {
+                        Database.AccountDetails.Remove(oneAccountDetail);
+
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        //databaseInnerExceptionMessage = ex.InnerException.Message;
+                        //status = false;
+                        //messages.Add(databaseInnerExceptionMessage);
+                        //return new JsonResult(response);
+                    }
+
+                }
+                catch (Exception outerException)
+                {
+                    //object httpFailRequestResultMessage = new { message = "Unable to delete account details record." +outerException };
+                    ////Return a bad http request message to the client
+                    //return BadRequest(httpFailRequestResultMessage);
+                }
+                accountDetailCount--;
+            }
+
             var customerAccount = await Database.CustomerAccounts.SingleOrDefaultAsync(m => m.CustomerAccountId == id);
             if (customerAccount == null)
             {

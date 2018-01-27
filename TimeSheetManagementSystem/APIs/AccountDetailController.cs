@@ -277,50 +277,50 @@ namespace TimeSheetManagementSystem.APIs
         }
 
         // DELETE: api/AccountDetail/DeleteByCustomerAccountId/5
-        [HttpDelete("DeleteByCustomerAccountId/{id}")]
-        public IActionResult DeleteByCustomerAccountId(int id)
-        {
-            string databaseInnerExceptionMessage = "";
-            List<object> messages = new List<object>();
-            bool status = true; //This variable is used to track the overall success of all the database operations
-            object response = null;
+        //[HttpDelete("DeleteByCustomerAccountId/{id}")]
+        //public IActionResult DeleteByCustomerAccountId(int id)
+        //{
+        //    string databaseInnerExceptionMessage = "";
+        //    List<object> messages = new List<object>();
+        //    bool status = true; //This variable is used to track the overall success of all the database operations
+        //    object response = null;
 
-            int count = (int)_context.AccountDetails
-                 .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).Count();
+        //    int count = (int)_context.AccountDetails
+        //         .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).Count();
 
-            while (count > 0)
-            {
-                AccountDetail oneAccountDetail = (AccountDetail)_context.AccountDetails
-                 .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).FirstOrDefault();
-                try
-                {
-                    try
-                    {
-                        _context.AccountDetails.Remove(oneAccountDetail);
-                        _context.SaveChanges();
+        //    while (count > 0)
+        //    {
+        //        AccountDetail oneAccountDetail = (AccountDetail)_context.AccountDetails
+        //         .Where(accountDetailItem => accountDetailItem.CustomerAccountId == id).FirstOrDefault();
+        //        try
+        //        {
+        //            try
+        //            {
+        //                _context.AccountDetails.Remove(oneAccountDetail);
+        //                _context.SaveChanges();
 
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        databaseInnerExceptionMessage = ex.InnerException.Message;
-                        status = false;
-                        messages.Add(databaseInnerExceptionMessage);
-                        return new JsonResult(response);
-                    }
+        //            }
+        //            catch (DbUpdateException ex)
+        //            {
+        //                databaseInnerExceptionMessage = ex.InnerException.Message;
+        //                status = false;
+        //                messages.Add(databaseInnerExceptionMessage);
+        //                return new JsonResult(response);
+        //            }
 
-                }
-                catch (Exception outerException)
-                {
-                    //object httpFailRequestResultMessage = new { message = "Unable to delete account details record." +outerException };
-                    ////Return a bad http request message to the client
-                    //return BadRequest(httpFailRequestResultMessage);
-                }
-                count--;
-            }
+        //        }
+        //        catch (Exception outerException)
+        //        {
+        //            //object httpFailRequestResultMessage = new { message = "Unable to delete account details record." +outerException };
+        //            ////Return a bad http request message to the client
+        //            //return BadRequest(httpFailRequestResultMessage);
+        //        }
+        //        count--;
+        //    }
 
-            response = new { status = "success", message = "Deleted account details record." };
-            return new JsonResult(response);
-        }//End of DeleteAccountDetailByCustomerId()
+        //    response = new { status = "success", message = "Deleted account details record." };
+        //    return new JsonResult(response);
+        //}//End of DeleteAccountDetailByCustomerId()
 
         private bool AccountDetailExists(int id)
         {

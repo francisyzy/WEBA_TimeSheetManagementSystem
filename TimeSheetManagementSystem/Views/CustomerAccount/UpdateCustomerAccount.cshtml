@@ -267,66 +267,66 @@
                 layout: 'center'
             }).show();
         });
-        $deleteAccountRatesHandler = jQuery.ajax({
-            type: 'Delete',
-            url: '/API/AccountRate/DeleteByCustomerAccountId/' + customerAccountId,
-        })
-        $deleteAccountRatesHandler.done(function (data, textStatus, jqXHR) {
-            if (data.status == "success") {
-                new Noty({
-                    text: data.message, type: 'success',
-                    dismissQueue: true,
-                    layout: 'center'
-                }).show();
-            } else {
-                new Noty({
-                    text: data.message, type: 'error',
-                    template: '<div class="noty_message"><span class="noty_text"></span>',
-                    layout: 'center'
-                }).show();
-            }
-        });
-        $deleteAccountRatesHandler.fail(function (data, textStatus, jqXHR) {
-            console.log('executed when runtime error on server side occurred');
-            console.log(data.responseJSON.message);
-            console.log(data);
-            new Noty({
-                text: data.responseJSON.message,
-                type: 'error',
-                template: '<div class="noty_message"><span class="noty_text"></span>',
-                layout: 'center'
-            }).show();
-        });
-        $deleteAccountDetailsHandler = jQuery.ajax({
-            type: 'Delete',
-            url: '/API/AccountDetail/DeleteByCustomerAccountId/' + customerAccountId,
-        })
-        $deleteAccountDetailsHandler.done(function (data, textStatus, jqXHR) {
-            if (data.status == "success") {
-                new Noty({
-                    text: data.message, type: 'success',
-                    dismissQueue: true,
-                    layout: 'center'
-                }).show();
-            } else {
-                new Noty({
-                    text: data.message, type: 'error',
-                    template: '<div class="noty_message"><span class="noty_text"></span>',
-                    layout: 'center'
-                }).show();
-            }
-        });
-        $deleteAccountDetailsHandler.fail(function (data, textStatus, jqXHR) {
-            console.log('executed when runtime error on server side occurred');
-            console.log(data.responseJSON.message);
-            console.log(data);
-            new Noty({
-                text: data.responseJSON.message,
-                type: 'error',
-                template: '<div class="noty_message"><span class="noty_text"></span>',
-                layout: 'center'
-            }).show();
-        });
+        //$deleteAccountRatesHandler = jQuery.ajax({
+        //    type: 'Delete',
+        //    url: '/API/AccountRate/DeleteByCustomerAccountId/' + customerAccountId,
+        //})
+        //$deleteAccountRatesHandler.done(function (data, textStatus, jqXHR) {
+        //    if (data.status == "success") {
+        //        new Noty({
+        //            text: data.message, type: 'success',
+        //            dismissQueue: true,
+        //            layout: 'center'
+        //        }).show();
+        //    } else {
+        //        new Noty({
+        //            text: data.message, type: 'error',
+        //            template: '<div class="noty_message"><span class="noty_text"></span>',
+        //            layout: 'center'
+        //        }).show();
+        //    }
+        //});
+        //$deleteAccountRatesHandler.fail(function (data, textStatus, jqXHR) {
+        //    console.log('executed when runtime error on server side occurred');
+        //    console.log(data.responseJSON.message);
+        //    console.log(data);
+        //    new Noty({
+        //        text: data.responseJSON.message,
+        //        type: 'error',
+        //        template: '<div class="noty_message"><span class="noty_text"></span>',
+        //        layout: 'center'
+        //    }).show();
+        //});
+        //$deleteAccountDetailsHandler = jQuery.ajax({
+        //    type: 'Delete',
+        //    url: '/API/AccountDetail/DeleteByCustomerAccountId/' + customerAccountId,
+        //})
+        //$deleteAccountDetailsHandler.done(function (data, textStatus, jqXHR) {
+        //    if (data.status == "success") {
+        //        new Noty({
+        //            text: data.message, type: 'success',
+        //            dismissQueue: true,
+        //            layout: 'center'
+        //        }).show();
+        //    } else {
+        //        new Noty({
+        //            text: data.message, type: 'error',
+        //            template: '<div class="noty_message"><span class="noty_text"></span>',
+        //            layout: 'center'
+        //        }).show();
+        //    }
+        //});
+        //$deleteAccountDetailsHandler.fail(function (data, textStatus, jqXHR) {
+        //    console.log('executed when runtime error on server side occurred');
+        //    console.log(data.responseJSON.message);
+        //    console.log(data);
+        //    new Noty({
+        //        text: data.responseJSON.message,
+        //        type: 'error',
+        //        template: '<div class="noty_message"><span class="noty_text"></span>',
+        //        layout: 'center'
+        //    }).show();
+        //});
     });//end of on click function
 
     //https://stackoverflow.com/questions/25275696/javascript-format-date-time#25275808

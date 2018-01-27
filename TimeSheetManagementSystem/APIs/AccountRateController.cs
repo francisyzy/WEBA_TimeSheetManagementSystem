@@ -256,50 +256,50 @@ namespace TimeSheetManagementSystem.APIs
         }
 
         // DELETE: api/AccountRate/DeleteByCustomerAccountId/5
-        [HttpDelete("DeleteByCustomerAccountId/{id}")]
-        public IActionResult DeleteByCustomerAccountId(int id)
-        {
-            string databaseInnerExceptionMessage = "";
-            List<object> messages = new List<object>();
-            bool status = true; //This variable is used to track the overall success of all the database operations
-            object response = null;
+        //[HttpDelete("DeleteByCustomerAccountId/{id}")]
+        //public IActionResult DeleteByCustomerAccountId(int id)
+        //{
+        //    string databaseInnerExceptionMessage = "";
+        //    List<object> messages = new List<object>();
+        //    bool status = true; //This variable is used to track the overall success of all the database operations
+        //    object response = null;
 
-            int count = (int)_context.AccountRates
-                 .Where(accountRateItem => accountRateItem.CustomerAccountId == id).Count();
+        //    int count = (int)_context.AccountRates
+        //         .Where(accountRateItem => accountRateItem.CustomerAccountId == id).Count();
 
-            while(count > 0)
-            {
-                AccountRate oneAccountRate = (AccountRate)_context.AccountRates
-                 .Where(accountRateItem => accountRateItem.CustomerAccountId == id).FirstOrDefault();
-                try
-                {
-                    try
-                    {
-                        _context.AccountRates.Remove(oneAccountRate);
-                        _context.SaveChanges();
+        //    while(count > 0)
+        //    {
+        //        AccountRate oneAccountRate = (AccountRate)_context.AccountRates
+        //         .Where(accountRateItem => accountRateItem.CustomerAccountId == id).FirstOrDefault();
+        //        try
+        //        {
+        //            try
+        //            {
+        //                _context.AccountRates.Remove(oneAccountRate);
+        //                _context.SaveChanges();
                         
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        databaseInnerExceptionMessage = ex.InnerException.Message;
-                        status = false;
-                        messages.Add(databaseInnerExceptionMessage);
-                        return new JsonResult(response);
-                    }
+        //            }
+        //            catch (DbUpdateException ex)
+        //            {
+        //                databaseInnerExceptionMessage = ex.InnerException.Message;
+        //                status = false;
+        //                messages.Add(databaseInnerExceptionMessage);
+        //                return new JsonResult(response);
+        //            }
 
-                }
-                catch (Exception outerException)
-                {
-                    //object httpFailRequestResultMessage = new { message = "Unable to delete account rate record." +outerException };
-                    ////Return a bad http request message to the client
-                    //return BadRequest(httpFailRequestResultMessage);
-                }
-                count--;
-            }
+        //        }
+        //        catch (Exception outerException)
+        //        {
+        //            //object httpFailRequestResultMessage = new { message = "Unable to delete account rate record." +outerException };
+        //            ////Return a bad http request message to the client
+        //            //return BadRequest(httpFailRequestResultMessage);
+        //        }
+        //        count--;
+        //    }
 
-            response = new { status = "success", message = "Deleted account rates record." };
-            return new JsonResult(response);
-        }//End of DeleteAccountRateByCustomerId()
+        //    response = new { status = "success", message = "Deleted account rates record." };
+        //    return new JsonResult(response);
+        //}//End of DeleteAccountRateByCustomerId()
 
         private bool AccountRateExists(int id)
         {
