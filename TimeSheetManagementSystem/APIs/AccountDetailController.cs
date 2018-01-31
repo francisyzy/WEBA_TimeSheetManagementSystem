@@ -140,10 +140,28 @@ namespace TimeSheetManagementSystem.APIs
 
             string dayOfWeekNumberString = accountDetailChangeInput.day;
             int dayOfWeekNumber = int.Parse(dayOfWeekNumberString);
-            if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && oneAccountDetail.EndTimeInMinutes > startTimeInt)
+            //if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && endTimeInt > oneAccountDetail.StartTimeInMinutes && oneAccountDetail.EndTimeInMinutes > startTimeInt)
+            //{
+            //    response = new { status = "fail", message = "Time Overlap" };
+            //    return new JsonResult(response);
+            //}
+
+            var accountDetailCheck = from AccountDetails in _context.AccountDetails
+                                     where AccountDetails.CustomerAccountId == AccountDetailId
+                                     select new
+                                     {
+                                         StartTimeInMinutes = AccountDetails.StartTimeInMinutes,
+                                         EndTimeInMinutes = AccountDetails.EndTimeInMinutes,
+                                         DayOfWeekNumber = AccountDetails.DayOfWeekNumber
+                                     };
+
+            foreach (var oneAccountDetailCheck in accountDetailCheck)
             {
-                response = new { status = "fail", message = "Start time must not overlapped previous end time" };
-                return new JsonResult(response);
+                if (oneAccountDetailCheck != null && oneAccountDetailCheck.DayOfWeekNumber == dayOfWeekNumber && endTimeInt > oneAccountDetailCheck.StartTimeInMinutes && oneAccountDetailCheck.EndTimeInMinutes > startTimeInt)
+                {
+                    response = new { status = "fail", message = "Time Overlap" };
+                    return new JsonResult(response);
+                }
             }
 
             oneAccountDetail.DayOfWeekNumber = accountDetailChangeInput.day;
@@ -242,12 +260,30 @@ namespace TimeSheetManagementSystem.APIs
 
             string dayOfWeekNumberString = accountDetailNewInput.day;
             int dayOfWeekNumber = int.Parse(dayOfWeekNumberString);
-            if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && oneAccountDetail.EndTimeInMinutes > startTimeInt)
-            {
-                response = new { status = "fail", message = "Start time must not overlapped previous end time" };
-                return new JsonResult(response);
-            }
+            //if (oneAccountDetail != null && oneAccountDetail.DayOfWeekNumber == dayOfWeekNumber && endTimeInt > oneAccountDetail.StartTimeInMinutes && oneAccountDetail.EndTimeInMinutes > startTimeInt)
+            //{
+            //    response = new { status = "fail", message = "Time Overlap" };
+            //    return new JsonResult(response);
+            //}
 
+            var accountDetailCheck = from AccountDetails in _context.AccountDetails
+                                     where AccountDetails.CustomerAccountId == customerAccountId
+                                     select new
+                                     {
+                                         StartTimeInMinutes = AccountDetails.StartTimeInMinutes,
+                                         EndTimeInMinutes = AccountDetails.EndTimeInMinutes,
+                                         DayOfWeekNumber = AccountDetails.DayOfWeekNumber
+                                     };
+
+            foreach(var oneAccountDetailCheck in accountDetailCheck)
+            {
+                if (oneAccountDetailCheck != null && oneAccountDetailCheck.DayOfWeekNumber == dayOfWeekNumber && endTimeInt > oneAccountDetailCheck.StartTimeInMinutes && oneAccountDetailCheck.EndTimeInMinutes > startTimeInt)
+                {
+                    response = new { status = "fail", message = "Time Overlap" };
+                    return new JsonResult(response);
+                }
+            }
+            
             newAccountDetail.CustomerAccountId = accountDetailNewInput.CustomerAccountId;
             newAccountDetail.CustomerAccount = currentCustomerAccount;
             newAccountDetail.DayOfWeekNumber = accountDetailNewInput.day;
